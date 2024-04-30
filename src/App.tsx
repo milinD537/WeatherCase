@@ -11,13 +11,19 @@ import { WeatherData } from './lib/types';
 function App() {
   const [count, setCount] = useState<number>(0)
   const [weatherJSON, setWeatherJSON] = useState<WeatherData | null>(null)
+  // const [backgroundColor, setBackgroundColor] = useState<string>("transparent")
 
   async function getCurrentWeatherData() {
-    const weatherJSONData = await getCurrentWeather({lat: 19.0144, lon: 72.8479});
+    const weatherJSONData = await getCurrentWeather({lat: 19.0785451, lon: 72.878176}); // Mumbai
+    // const weatherJSONData = await getCurrentWeather({lat: 41.8755616, lon: -87.6244212}); // Chicago
+
     console.log('weatherJSON: ',weatherJSONData);
     
     if (!weatherJSONData) return;
     setWeatherJSON(weatherJSONData);
+    // await weatherJSON?.weather[0].icon.endsWith('d')?setBackgroundColor("#87CEEB"):setBackgroundColor("#444458")
+    // const backgroundColor = weatherJSON?(weatherJSON.weather[0].icon.endsWith('d')?"#87CEEB":"#444458"):"transparent"
+    
   }
   useEffect(() => {
     getCurrentWeatherData();
@@ -26,7 +32,12 @@ function App() {
   
   const sunrise = weatherJSON? new Date(weatherJSON.sys.sunrise * 1000):new Date();
   const sunset = weatherJSON? new Date(weatherJSON.sys.sunset * 1000):new Date();
-
+  const timeAtCurrentLocation = weatherJSON? new Date((weatherJSON.dt * 1000) + weatherJSON.timezone):new Date();
+  
+  const backgroundColor = weatherJSON?weatherJSON.weather[0].icon.endsWith("d")?"#87CEEB":"#444458":"transparent"
+  console.log(backgroundColor);
+  document.body.style.backgroundColor = backgroundColor;
+  // const backgroundColor = weatherJSON?(weatherJSON.weather[0].icon.includes("d")?"#87CEEB":"#444458"):"#87CEEB"
   return (
     <>
       <header>
@@ -40,7 +51,7 @@ function App() {
           {!weatherJSON ? (<p>Getting Data...</p>):(
             <>
               <div className='weatherCurrent'>
-                <p></p>
+                <p>{timeAtCurrentLocation.toString()}</p>
                 <h2>{weatherJSON.name}, {weatherJSON.sys.country}</h2>
                 <div className='temperature'>
                   <img src={`https://openweathermap.org/img/wn/${weatherJSON.weather[0].icon}@2x.png`} alt={weatherJSON.weather[0].description} title={weatherJSON.weather[0].description} />
@@ -59,7 +70,7 @@ function App() {
                   <div className="sunset">
                     <IoMoon />
                     <div>
-                      <p>Sunrise</p>
+                      <p>Sunset</p>
                       <p>{sunset.getHours() % 12 < 10 ? (<span>0</span>) : "yo"}{`${sunset.getHours() % 12 || 12}:${sunset.getMinutes()}`} PM</p>
                       {/* <p>{sunset.toLocaleTimeString([], {hour12: true}).slice(0, 4)} PM</p> */}
                     </div>
