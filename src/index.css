@@ -13,7 +13,7 @@
 * {
   margin: 0;
   padding: 0;
-  outline: solid hsl(0,0%,90%,20%);
+  /* outline: solid hsl(0,0%,90%,20%); */
 }
 img, picture, video, canvas, svg {
   display: block;

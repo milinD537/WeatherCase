@@ -16,6 +16,8 @@ function App() {
   async function getCurrentWeatherData() {
     const weatherJSONData = await getCurrentWeather({lat: 19.0785451, lon: 72.878176}); // Mumbai
     // const weatherJSONData = await getCurrentWeather({lat: 41.8755616, lon: -87.6244212}); // Chicago
+    // const weatherJSONData = await getCurrentWeather({lat: 39.9075, lon: 116.3972}); // Beijing
+
 
     console.log('weatherJSON: ',weatherJSONData);
     
@@ -34,10 +36,19 @@ function App() {
   const sunset = weatherJSON? new Date(weatherJSON.sys.sunset * 1000):new Date();
   const timeAtCurrentLocation = weatherJSON? new Date((weatherJSON.dt * 1000) + weatherJSON.timezone):new Date();
   
-  const backgroundColor = weatherJSON?weatherJSON.weather[0].icon.endsWith("d")?"#87CEEB":"#444458":"transparent"
-  console.log(backgroundColor);
+  // Function to check if day or not
+  const isDay = ()=>(weatherJSON?.weather[0].icon.endsWith("d")?true:false)
+  // setting styles based on day or night
+  const backgroundColor = weatherJSON?isDay()?"#87CEEB":"#444458":"transparent"
+  const textColor = weatherJSON?isDay()?"black":"white":"black"
+  const sunMoon = weatherJSON?isDay()?"#FDC630":"#CECACB":"transparent"
+  const sunMoonBlur = weatherJSON?isDay()?100:1:0
+  const moonCurveBackgroundColor = weatherJSON?isDay()?"transparent":"#444458":"transparent"
+  // applying day/night styles
   document.body.style.backgroundColor = backgroundColor;
-  // const backgroundColor = weatherJSON?(weatherJSON.weather[0].icon.includes("d")?"#87CEEB":"#444458"):"#87CEEB"
+  document.body.style.color = textColor;
+  // document.querySelector('.sunMoon')?.style.backgroundColor = 
+  
   return (
     <>
       <header>
@@ -50,7 +61,11 @@ function App() {
         <div className="weatherGrid">
           {!weatherJSON ? (<p>Getting Data...</p>):(
             <>
-              <div className='weatherCurrent'>
+              <div className='justForStyling sunMoon | absolute top-[40%] min-[900px]:top-0 left-0 w-full aspect-[1.05] rounded-[50%] -translate-y-1/2 -z-20' style={{backgroundColor: sunMoon, filter: `blur(${sunMoonBlur}px)`}}>
+                <div className='justForStyling moon | absolute w-full h-full rounded-[inherit] bottom-[25%] right-[10%] blur-[20px]' style={{backgroundColor: moonCurveBackgroundColor}}></div>
+              </div>
+
+              <div className='weatherCurrent | p-4 rounded-2xl '>
                 <p>{timeAtCurrentLocation.toString()}</p>
                 <h2>{weatherJSON.name}, {weatherJSON.sys.country}</h2>
                 <div className='temperature'>
