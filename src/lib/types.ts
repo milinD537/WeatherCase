@@ -34,6 +34,7 @@ export type Sys = {
     country: string;
     sunrise: number;
     sunset: number;
+    pod?: string;
 };
 
 export type Rain = {
@@ -41,7 +42,7 @@ export type Rain = {
     "3h"?: number;
 };
 
-export type WeatherData = {
+export type CurrentWeatherData = {
     coord: Coord;
     weather: Weather[];
     base: string;
@@ -56,4 +57,34 @@ export type WeatherData = {
     id: number;
     name: string;
     cod: number;
+};
+
+export type City = {
+    id: number;
+    name: string;
+    coord: Coord;
+    country: string;
+    population: number;
+    timezone: number;
+    sunrise: number;
+    sunset: number;
+};
+export type List = {
+    dt: number;
+    main: Main;
+    weather: Weather[];
+    clouds: Clouds;
+    wind: Wind;
+    visibility: number;
+    pop: number;
+    rain: Rain;
+    sys: Sys;
+    dt_txt: string;
+};
+export type ForecastWeatherData = {
+    cod: string;
+    message: number;
+    cnt: number;
+    list: [];
+    city: City;
 };
