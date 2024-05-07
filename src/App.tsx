@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import { IoMoon, IoSunny } from "react-icons/io5";
-import weatherForecastJSON from './lib/apiForecastDummy.json'
 import { FaLocationArrow } from 'react-icons/fa';
 import { getCurrentWeather } from './lib/api';
 import { getForecastWeather } from './lib/api';
@@ -11,7 +10,6 @@ import { ForecastWeatherData } from './lib/types';
 import WeatherForecastCard from './components/WeatherForecastCard';
 
 function App() {
-  const [count, setCount] = useState<number>(0)
   const [currentWeatherJSON, setCurrentWeatherJSON] = useState<CurrentWeatherData | null>(null)
   const [forecastWeatherJSON, setForecastWeatherJSON] = useState<ForecastWeatherData | null>(null)
 
@@ -99,7 +97,6 @@ function App() {
                 <div>
                   <p className='text-xs font-light' style={{ color: riseSetTextColor }}>Sunset</p>
                   <p className='text-2xl font-medium'>{sunset.getHours() % 12 < 10 ? (<span>0</span>) : "yo"}{`${sunset.getHours() % 12 || 12}:${sunset.getMinutes()}`} PM</p>
-                  {/* <p>{sunset.toLocaleTimeString([], {hour12: true}).slice(0, 4)} PM</p> */}
                 </div>
               </div>
             </div>
@@ -132,7 +129,7 @@ function App() {
 
           <div className='weatherForecastGraph'></div>
           <div className='weatherForecastFiveDays | grid gap-1'>
-            {forecastWeatherJSON.list.filter((data, index)=>((index+1) % 8 === 0)).map((forecastData, index)=><WeatherForecastCard key={forecastData} item={forecastData} cardBackgroundColor={cardBackgroundColor}/>)}
+            {forecastWeatherJSON.list.filter((_data, index)=>((index+1) % 8 === 0)).map((forecastData)=><WeatherForecastCard key={forecastData} item={forecastData} cardBackgroundColor={cardBackgroundColor}/>)}
           </div>
         </div>
       </main>

@@ -1,4 +1,3 @@
-import React from "react";
 import { List } from "../lib/types";
 
 export default function WeatherForecastCard({item, cardBackgroundColor}: {item: List,cardBackgroundColor: string}) {
