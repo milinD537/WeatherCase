@@ -4,6 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@property --redFillColorStop {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
 /* RESET */
 *,
 *::before,
@@ -25,4 +30,130 @@ input {
 
 body {
   font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Loader */
+.loaderWrapper {
+  --animationDuration: 6s;
+  scale: 0.75;
+  --loaderHeight: 600px;
+  height: var(--loaderHeight);
+  aspect-ratio: 1/3.5;
+  
+  position: relative;
+  animation: shake var(--animationDuration) infinite linear;
+}
+.blue {
+  background: hsl(193, 93%, 78%);
+}
+.gray {
+  background: hsl(0, 0%, 92%);
+}
+.redFill {
+/*   --redFillColorStop: 300px; */
+  background: linear-gradient(to top, hsl(3, 82%, 51%) var(--redFillColorStop), transparent 0%);
+  animation: tempRise var(--animationDuration) infinite linear;
+}
+.partOne {
+  width: 70%;
+  height: 100%;
+  margin-inline: auto;
+  border-radius: 9999px;
+  position: relative;
+}
+.partOneChild, .partOneChildChild {
+  position: absolute;
+  inset: 0.5rem;
+  border-radius: inherit;
+}
+.partTwo {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 0;
+}
+.partTwoChild, .partTwoChildChild {
+  position: absolute;
+  inset: 0.5rem;
+  border-radius: inherit;
+}
+.partOneChild {
+  z-index: 1;
+}
+.partTwoChildChild {
+  z-index: 1;
+}
+.partOneChildChild,
+.partTwoChildChild {
+  overflow: hidden;
+}
+.partOneChildChild::before,
+.partTwoChildChild::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transform: translateX(-1.5rem) translateY(-0.6875rem);
+  background: hsl(0 0% 92% / 0.25);
+}
+.partTwoChildChild::before {
+  translate: 0.25rem 0;
+}
+.shine {
+  position: absolute;
+  width: 10%;
+  aspect-ratio: 1/2.75;
+  left: 10%;
+  top: 7%;
+  border-radius: inherit;
+  background: white;
+  box-shadow: 0 35px white, 0 45px white, 0 55px white;
+}
+.measurements {
+  position: absolute;
+  width: 25%;
+  aspect-ratio: 3.5/1;
+  border-radius: inherit;
+  top: 28%;
+  left: 5%;
+  background: white;
+  opacity: 0.75;
+  box-shadow:  0 1rem white,
+               0 2rem white,
+               0 3rem white, 1rem 3rem white,
+               0 4rem white,
+               0 5rem white,
+               0 6rem white,
+               0 7rem white, 1rem 7rem white,
+               0 8rem white,
+               0 9rem white,
+              0 10rem white,
+              0 11rem white, 1rem 11rem white,
+              0 12rem white,
+              0 13rem white,
+              0 14rem white,
+              0 15rem white, 1rem 15rem white;
+}
+
+@keyframes tempRise {
+  0%,
+  100% {
+    --redFillColorStop: 0px;
+  }
+  50% {
+    --redFillColorStop: calc(var(--loaderHeight) - 2rem);
+  }
+}
+@keyframes shake {
+  0%,
+  100%, 10%, 90% {
+    transform: translateX(0rem);
+  }
+  20%, 30%, 38%, 44%, 48%, 50%, 54%, 60%, 68%, 78% {
+    transform: translateX(-0.5rem);
+  }
+  25%, 34%, 41%, 46%, 49%, 52%, 57%, 64%, 73%, 84% {
+    transform: translateX(0.5rem);
+  }
 }

@@ -88,3 +88,11 @@ export type ForecastWeatherData = {
     list: [];
     city: City;
 };
+
+export type SearchArrayData = {
+    name: string;
+    lat: number;
+    lon: number;
+    country: string;
+    state: string;
+};

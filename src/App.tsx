@@ -7,17 +7,18 @@ import { getForecastWeather } from './lib/api';
 import { getCityName } from './lib/api';
 import { CurrentWeatherData } from './lib/types';
 import { ForecastWeatherData } from './lib/types';
+import { SearchArrayData } from './lib/types';
 
 import WeatherForecastCard from './components/WeatherForecastCard';
 
 function App() {
   const [currentWeatherJSON, setCurrentWeatherJSON] = useState<CurrentWeatherData | null>(null)
   const [forecastWeatherJSON, setForecastWeatherJSON] = useState<ForecastWeatherData | null>(null)
-  const [searchArray, setSearchArray] = useState<SearchArrayData | null>(null)
+  const [searchArray, setSearchArray] = useState<SearchArrayData[] | []>([])
   const [searchCity, setSearchCity] = useState<string>('')
 
-  async function getWeatherData() {
-    const coords = {lat: 19.0785451, lon: 72.878176} // Mumbai
+  async function getWeatherData({lat= 19.0785451, lon=72.878176} : {lat: number, lon: number}) {
+    const coords = {lat: lat, lon: lon} // Mumbai
     // const coords = {lat: 41.8755616, lon: -87.6244212} // Chicago
     // const coords = {lat: 39.9075, lon: 116.3972} // Beijing
 
@@ -37,7 +38,7 @@ function App() {
     setSearchArray(searchArrayData);
   }
   useEffect(() => {
-    getWeatherData();
+    getWeatherData({lat: 19.0785451, lon: 72.878176});
   },[])
 
   // let searchCity = document.getElementById('searchCity')?.value;  
@@ -51,7 +52,21 @@ function App() {
     return (
       <>
         <div className='loader | min-h-[inherit] grid place-items-center'>
-          <p className='text-5xl'>Loading</p>
+          <div className="loaderWrapper">
+            <div className="blue partOne">
+              <div className="gray partOneChild">
+                <div className="redFill partOneChildChild">
+                  <div className="shine"></div>
+                  <div className="measurements"></div>
+                </div>
+              </div>
+            </div>
+            <div className="blue partTwo">
+              <div className="gray partTwoChild">
+                <div className="redFill partTwoChildChild"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </>
     )
@@ -75,14 +90,23 @@ function App() {
   const riseSetTextColor = isDay()?"hsl(0 0% 25%)":"hsl(0 0% 75%)"
   // applying day/night styles
   document.body.style.backgroundColor = backgroundColor;
+  // document.body.style.backgroundAttachment = "fixed";
   document.body.style.color = textColor;
   
   return (
     <>
       <header>
         <div>
-          <input type="text" placeholder="City, State, Country..." id='searchCity' onChange={(e)=> setSearchCity(e.target.value)}/>
-          <button type="submit">Search</button>
+          <input list='searchArray' type="text" placeholder="City, State, Country..." id='searchCity' onChange={(e)=> setSearchCity(e.target.value)}/>
+          <button type="submit" onClick={()=> getWeatherData({lat: searchArray[0].lat, lon: searchArray[0].lon})}>Search</button>
+          <datalist id='searchArray'>
+            <option value={searchArray[0]?.name} onClick={()=> {console.log('searchArray[0]: ',searchArray[0]);
+            ;getWeatherData({lat: searchArray[0].lat, lon: searchArray[0].lon})}}></option>
+            <option value={searchArray[1]?.name}></option>
+            <option value={searchArray[2]?.name}></option>
+            <option value={searchArray[3]?.name}></option>
+            <option value={searchArray[4]?.name}></option>
+          </datalist>
           <p></p>
           <p></p>
           <p></p>
