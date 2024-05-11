@@ -4,6 +4,7 @@ import { IoMoon, IoSunny } from "react-icons/io5";
 import { FaLocationArrow } from 'react-icons/fa';
 import { getCurrentWeather } from './lib/api';
 import { getForecastWeather } from './lib/api';
+import { getCityName } from './lib/api';
 import { CurrentWeatherData } from './lib/types';
 import { ForecastWeatherData } from './lib/types';
 
@@ -12,6 +13,8 @@ import WeatherForecastCard from './components/WeatherForecastCard';
 function App() {
   const [currentWeatherJSON, setCurrentWeatherJSON] = useState<CurrentWeatherData | null>(null)
   const [forecastWeatherJSON, setForecastWeatherJSON] = useState<ForecastWeatherData | null>(null)
+  const [searchArray, setSearchArray] = useState<SearchArrayData | null>(null)
+  const [searchCity, setSearchCity] = useState<string>('')
 
   async function getWeatherData() {
     const coords = {lat: 19.0785451, lon: 72.878176} // Mumbai
@@ -27,9 +30,22 @@ function App() {
     setCurrentWeatherJSON(currentWeatherJSONData);
     setForecastWeatherJSON(forecastWeatherJSONData);
   }
+  async function getCityWeather(place: string) {
+    const searchArrayData = await getCityName({name: place});
+    console.log('searchArray: ',searchArrayData);
+    if (!searchArrayData) return;
+    setSearchArray(searchArrayData);
+  }
   useEffect(() => {
     getWeatherData();
   },[])
+
+  // let searchCity = document.getElementById('searchCity')?.value;  
+  useEffect(()=>{
+    if(searchCity.trim() === '') return;
+    console.log('searchCity: ',searchCity);
+    getCityWeather(searchCity);
+  },[searchCity])
 
   if (currentWeatherJSON === null || forecastWeatherJSON === null) {
     return (
@@ -64,10 +80,15 @@ function App() {
   return (
     <>
       <header>
-        <form action="search" className="search">
-          <input type="text" placeholder="Search for a city..." />
+        <div>
+          <input type="text" placeholder="City, State, Country..." id='searchCity' onChange={(e)=> setSearchCity(e.target.value)}/>
           <button type="submit">Search</button>
-        </form>
+          <p></p>
+          <p></p>
+          <p></p>
+          <p></p>
+          <p></p>
+        </div>
       </header>
       <main>
         <div className="weatherGrid | w-[min(1200px,100%_-_1.5rem)] mx-auto grid min-[900px]:grid-cols-[auto_1fr] gap-3">
@@ -129,7 +150,7 @@ function App() {
 
           <div className='weatherForecastGraph'></div>
           <div className='weatherForecastFiveDays | grid gap-1'>
-            {forecastWeatherJSON.list.filter((_data, index)=>((index+1) % 8 === 0)).map((forecastData)=><WeatherForecastCard key={forecastData} item={forecastData} cardBackgroundColor={cardBackgroundColor}/>)}
+            {forecastWeatherJSON.list.filter((_data, index)=>((index+1) % 8 === 0)).map((forecastData, index)=><WeatherForecastCard key={index} item={forecastData} cardBackgroundColor={cardBackgroundColor}/>)}
           </div>
         </div>
       </main>
