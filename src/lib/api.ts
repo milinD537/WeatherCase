@@ -31,7 +31,7 @@ export const getForecastWeather = async ({lat,lon}: {lat: number, lon: number}) 
 export const getCityName = async ({name}: {name: string}) => {
     try {
         const API_KEY = import.meta.env.VITE_API_KEY;
-        const respone = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${name}&limit=5&appid=${API_KEY}`);
+        const respone = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${name}&limit=5&appid=${API_KEY}`);
         
         const data = await respone.json();
         console.log("search data: ", data);
