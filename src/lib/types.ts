@@ -85,7 +85,7 @@ export type ForecastWeatherData = {
     cod: string;
     message: number;
     cnt: number;
-    list: [];
+    list: List[];
     city: City;
 };
 

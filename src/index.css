@@ -34,7 +34,7 @@ body {
 
 /* Loader */
 .loaderWrapper {
-  --animationDuration: 6s;
+  --animationDuration: 3s;
   scale: 0.75;
   --loaderHeight: 600px;
   height: var(--loaderHeight);
@@ -156,4 +156,9 @@ body {
   25%, 34%, 41%, 46%, 49%, 52%, 57%, 64%, 73%, 84% {
     transform: translateX(0.5rem);
   }
+}
+
+.useGPU {
+  transform: translate3d(0,0,0);
+  -moz-transform: translate3d(0,0,0);
 }

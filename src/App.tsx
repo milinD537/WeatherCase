@@ -10,6 +10,7 @@ import { ForecastWeatherData } from './lib/types';
 import { SearchArrayData } from './lib/types';
 
 import WeatherForecastCard from './components/WeatherForecastCard';
+import WeatherForecastGraph from './components/WeatherForecastGraph';
 
 function App() {
   const [currentWeatherJSON, setCurrentWeatherJSON] = useState<CurrentWeatherData | null>(null)
@@ -18,9 +19,7 @@ function App() {
   const [searchCity, setSearchCity] = useState<string>('')
 
   async function getWeatherData({lat= 19.0785451, lon=72.878176} : {lat: number, lon: number}) {
-    const coords = {lat: lat, lon: lon} // Mumbai
-    // const coords = {lat: 41.8755616, lon: -87.6244212} // Chicago
-    // const coords = {lat: 39.9075, lon: 116.3972} // Beijing
+    const coords = {lat: lat, lon: lon}
 
     const currentWeatherJSONData = await getCurrentWeather(coords);
     const forecastWeatherJSONData = await getForecastWeather(coords);
@@ -90,7 +89,6 @@ function App() {
   const riseSetTextColor = isDay()?"hsl(0 0% 25%)":"hsl(0 0% 75%)"
   // applying day/night styles
   document.body.style.backgroundColor = backgroundColor;
-  // document.body.style.backgroundAttachment = "fixed";
   document.body.style.color = textColor;
   
   return (
@@ -114,13 +112,13 @@ function App() {
           <p></p>
         </div>
       </header>
-      <main>
+      <main className=''>
         <div className="weatherGrid | w-[min(1200px,100%_-_1.5rem)] mx-auto grid min-[900px]:grid-cols-[auto_1fr] gap-3">
-          <div className='justForStyling sunMoon | absolute top-[40%] min-[900px]:top-0 left-0 w-full aspect-[1.05] rounded-[50%] -translate-y-1/2 -z-20' style={{ backgroundColor: sunMoon, filter: `blur(${sunMoonBlur}px)` }}>
-            <div className='justForStyling moon | absolute w-full h-full rounded-[inherit] bottom-[25%] right-[10%] blur-[20px]' style={{ backgroundColor: moonCurveBackgroundColor }}></div>
+          <div className='justForStyling sunMoon | absolute top-[40%] min-[900px]:top-0 left-0 w-full aspect-[1.05] rounded-[50%] -translate-y-1/2 -z-20 useGPU' style={{ backgroundColor: sunMoon, filter: `blur(${sunMoonBlur}px)` }}>
+            <div className='justForStyling moon | absolute w-full h-full rounded-[inherit] bottom-[25%] right-[10%] blur-[20px] useGPU' style={{ backgroundColor: moonCurveBackgroundColor }}></div>
           </div>
 
-          <div className='weatherCurrent | p-4 rounded-2xl backdrop-blur-[50px]' style={{ backgroundColor: cardBackgroundColor }}>
+          <div className='weatherCurrent | p-4 rounded-2xl backdrop-blur-[50px] useGPU' style={{ backgroundColor: cardBackgroundColor }}>
             <p className='mb-2'>{months[timeAtCurrentLocation.getMonth()]} {timeAtCurrentLocation.getDate()}, {timeAtCurrentLocation.getHours()}:{timeAtCurrentLocation.getMinutes()}</p>
             <h2 className='text-[2rem] font-medium'>{currentWeatherJSON.name}, {currentWeatherJSON.sys.country}</h2>
             <div className='temperature | flex items-center'>
@@ -172,7 +170,9 @@ function App() {
 
           <div className='weatherMap'></div>
 
-          <div className='weatherForecastGraph'></div>
+          <div className='weatherForecastGraph'>
+            <WeatherForecastGraph list={forecastWeatherJSON.list.slice(0,8)} cardBackgroundColor={cardBackgroundColor} textColor={textColor}/>
+          </div>
           <div className='weatherForecastFiveDays | grid gap-1'>
             {forecastWeatherJSON.list.filter((_data, index)=>((index+1) % 8 === 0)).map((forecastData, index)=><WeatherForecastCard key={index} item={forecastData} cardBackgroundColor={cardBackgroundColor}/>)}
           </div>
