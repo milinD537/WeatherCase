@@ -13,28 +13,32 @@ export default function WeatherForecastGraph({list, cardBackgroundColor, textCol
         { name: "Page G", uv: 3490, pv: 4300, amt: 2100 }
       ];
     const data = list;
+    const dataNew = list.map((data)=> ({
+        time: new Date((data.dt * 1000)).getHours() % 12,
+        temp: data.main.temp,
+    }))
+    
     return (
         <>
-            <div className='backdrop-blur-[50px] useGPU p-4 rounded-2xl h-full w-auto min-[900px]:max-w-[400px]' style={{backgroundColor: cardBackgroundColor}}>
-                <ResponsiveContainer className={'w-full'}>
-                    <LineChart data={data} margin={{ top: 4, right: 8, left: -30, bottom: 0 }}>
-                        <XAxis stroke={textColor} />
-                        <YAxis stroke={textColor} />
-                        <CartesianGrid strokeDasharray="3 3" />
+            <div className='backdrop-blur-[50px] p-4 rounded-2xl h-full w-auto min-[900px]:max-w-[420px] aspect-[1.135]' style={{backgroundColor: cardBackgroundColor}}>
+                <ResponsiveContainer className={''}>
+                    <LineChart data={dataNew} width={415} margin={{ top: 4, right: 8, left: -18, bottom: 0 }}>
+                        <XAxis stroke={textColor} opacity={0.5} dataKey="time" />
+                        <YAxis stroke={textColor} opacity={0.5} unit=" C" />
+                        <CartesianGrid strokeDasharray="3 3" stroke={textColor} opacity={0.5} />
+                        <Tooltip wrapperStyle={{borderRadius: "1rem", overflow: "hidden"}} contentStyle={{backgroundColor: cardBackgroundColor, border: "none",}} />
+                        <Legend />
+                        <Line type="monotone" dataKey="temp" name='Temperature (in C)' stroke="#8884d8" />
+                    </LineChart>
+                    {/* <AreaChart data={data} margin={{ top: 4, right: 8, left: -30, bottom: 0 }}>
+                        <XAxis stroke={textColor} opacity={0.5}/>
+                        <YAxis stroke={textColor} opacity={0.5}/>
+                        <CartesianGrid strokeDasharray="3 3" stroke={textColor} opacity={0.5} />
                         <Tooltip />
                         <Legend />
-                        <Line type="monotone" dataKey="main.temp" stroke="#8884d8" />
-                    </LineChart>
+                        <Area type="monotone" dataKey="main.temp" stroke="#8884d8" />
+                    </AreaChart> */}
                 </ResponsiveContainer>
-                {/* <ResponsiveContainer >
-                    <AreaChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                        <XAxis dataKey="dt" />
-                        <YAxis />
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <Tooltip />
-                        <Area type="monotone" dataKey="main.temp" stroke="#8884d8" fill="#8884d8" />
-                    </AreaChart>
-                </ResponsiveContainer> */}
             </div>
         </>
     )

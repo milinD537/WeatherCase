@@ -114,18 +114,18 @@ function App() {
       </header>
       <main className=''>
         <div className="weatherGrid | w-[min(1200px,100%_-_1.5rem)] mx-auto grid min-[900px]:grid-cols-[auto_1fr] gap-3">
-          <div className='justForStyling sunMoon | absolute top-[40%] min-[900px]:top-0 left-0 w-full aspect-[1.05] rounded-[50%] -translate-y-1/2 -z-20 useGPU' style={{ backgroundColor: sunMoon, filter: `blur(${sunMoonBlur}px)` }}>
-            <div className='justForStyling moon | absolute w-full h-full rounded-[inherit] bottom-[25%] right-[10%] blur-[20px] useGPU' style={{ backgroundColor: moonCurveBackgroundColor }}></div>
+          <div className='justForStyling sunMoon | absolute top-[40%] min-[900px]:top-0 left-0 w-full aspect-[1.05] rounded-[50%] -translate-y-1/2 -z-20' style={{ backgroundColor: sunMoon, filter: `blur(${sunMoonBlur}px)` }}>
+            <div className='justForStyling moon | absolute w-full h-full rounded-[inherit] bottom-[25%] right-[10%] blur-[20px]' style={{ backgroundColor: moonCurveBackgroundColor }}></div>
           </div>
 
-          <div className='weatherCurrent | p-4 rounded-2xl backdrop-blur-[50px] useGPU' style={{ backgroundColor: cardBackgroundColor }}>
+          <div className='weatherCurrent | p-4 rounded-2xl backdrop-blur-[50px]' style={{ backgroundColor: cardBackgroundColor }}>
             <p className='mb-2'>{months[timeAtCurrentLocation.getMonth()]} {timeAtCurrentLocation.getDate()}, {timeAtCurrentLocation.getHours()}:{timeAtCurrentLocation.getMinutes()}</p>
             <h2 className='text-[2rem] font-medium'>{currentWeatherJSON.name}, {currentWeatherJSON.sys.country}</h2>
             <div className='temperature | flex items-center'>
               <img src={`https://openweathermap.org/img/wn/${currentWeatherJSON.weather[0].icon}@2x.png`} alt={currentWeatherJSON.weather[0].description} title={currentWeatherJSON.weather[0].description} />
               <h2 className='text-[2rem] font-bold'>{currentWeatherJSON.main.temp} <sup>o</sup>C</h2>
             </div>
-            <p className='font-medium mb-4'>{currentWeatherJSON.weather[0].main} | Feels like: {currentWeatherJSON.main.feels_like} <sup>o</sup>C | <span title='Minimum'>{currentWeatherJSON.main.temp_min} <sup>o</sup>C</span> - <span title='Maximum'>{currentWeatherJSON.main.temp_max} <sup>o</sup>C</span></p>
+            <p className='font-medium mb-4'>{currentWeatherJSON.weather[0].main} <span className='font-thin'>|</span> Feels like: {currentWeatherJSON.main.feels_like} <sup>o</sup>C <span className='font-thin'>|</span> <span title='Minimum'>{currentWeatherJSON.main.temp_min} <sup>o</sup>C</span> - <span title='Maximum'>{currentWeatherJSON.main.temp_max} <sup>o</sup>C</span></p>
             <hr className='border border-[#808080] rounded-full mb-4' />
             <div className='riseAndSet | flex justify-between mb-4'>
               <div className="sunrise | flex items-center gap-2">

@@ -13,7 +13,7 @@ export default function WeatherForecastCard({item, cardBackgroundColor}: {item: 
                     <p className="self-center">{days[time.getDay()]}, {months[time.getMonth()]} {time.getDate()}</p>
                     <div className="flex items-center | justify-self-center">
                         <img src={`https://openweathermap.org/img/wn/${item.weather[0].icon}.png`} alt="" />
-                        <p><span>{Math.round(item.main.temp_max)}</span> / <span>{Math.round(item.main.temp_min)}</span> <sup>o</sup>C</p>
+                        <p className="font-light"><span>{Math.round(item.main.temp_max)}</span> / <span>{Math.round(item.main.temp_min)}</span> <span className="font-thin text-sm"><sup>o</sup>C</span></p>
                     </div>
                     <p className="justify-self-end self-center font-thin text-sm text-end">{item.weather[0].description}</p>
                 </div>
