@@ -96,3 +96,5 @@ export type SearchArrayData = {
     country: string;
     state: string;
 };
+
+export type Coords = [number, number];

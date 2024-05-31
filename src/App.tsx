@@ -1,22 +1,24 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import { IoMoon, IoSunny } from "react-icons/io5";
-import { FaLocationArrow } from 'react-icons/fa';
+import { FaLocationArrow, FaSearch } from 'react-icons/fa';
 import { getCurrentWeather } from './lib/api';
 import { getForecastWeather } from './lib/api';
 import { getCityName } from './lib/api';
-import { CurrentWeatherData } from './lib/types';
+import { Coords, CurrentWeatherData } from './lib/types';
 import { ForecastWeatherData } from './lib/types';
 import { SearchArrayData } from './lib/types';
 
 import WeatherForecastCard from './components/WeatherForecastCard';
 import WeatherForecastGraph from './components/WeatherForecastGraph';
+import WeatherMap from './components/WeatherMap';
 
 function App() {
   const [currentWeatherJSON, setCurrentWeatherJSON] = useState<CurrentWeatherData | null>(null)
   const [forecastWeatherJSON, setForecastWeatherJSON] = useState<ForecastWeatherData | null>(null)
   const [searchArray, setSearchArray] = useState<SearchArrayData[] | []>([])
   const [searchCity, setSearchCity] = useState<string>('')
+  const [coords, setCoords] = useState<Coords>([19.0785451, 72.878176])
 
   async function getWeatherData({lat= 19.0785451, lon=72.878176} : {lat: number, lon: number}) {
     const coords = {lat: lat, lon: lon}
@@ -90,13 +92,17 @@ function App() {
   // applying day/night styles
   document.body.style.backgroundColor = backgroundColor;
   document.body.style.color = textColor;
+
+  // const coords = (searchArray[0])?{lat: searchArray[0].lat, lon: searchArray[0].lon}:{lat: 19.0785451, lon: 72.878176};
+  // console.log(coords);
   
+
   return (
     <>
       <header>
-        <div>
-          <input list='searchArray' type="text" placeholder="City, State, Country..." id='searchCity' onChange={(e)=> setSearchCity(e.target.value)}/>
-          <button type="submit" onClick={()=> getWeatherData({lat: searchArray[0].lat, lon: searchArray[0].lon})}>Search</button>
+        <div className='relative outline w-max mx-auto px-8 py-2 rounded-full z-0'>
+          <button type="submit" className='has-[+_:focus]:animate-[rotateAnimation_2s_linear_forwards] | absolute -z-10 left-[1%] has-[+_:focus]:left-[calc(99%_-_1.5rem)] transition-[left] duration-[1s] has-[+_:focus]:delay-[1s] ease-in-out' onClick={()=> { getWeatherData({lat: searchArray[0].lat, lon: searchArray[0].lon}); setCoords([searchArray[0].lat, searchArray[0].lon]) }}><FaSearch size={"1.5rem"}/></button>
+          <input list='searchArray' type="text" className='placeholder:text-inherit peer outline-none' placeholder="City, State, Country..." id='searchCity' onChange={(e)=> setSearchCity(e.target.value)}/>
           <datalist id='searchArray'>
             <option value={searchArray[0]?.name} onClick={()=> {console.log('searchArray[0]: ',searchArray[0]);
             ;getWeatherData({lat: searchArray[0].lat, lon: searchArray[0].lon})}}></option>
@@ -105,11 +111,6 @@ function App() {
             <option value={searchArray[3]?.name}></option>
             <option value={searchArray[4]?.name}></option>
           </datalist>
-          <p></p>
-          <p></p>
-          <p></p>
-          <p></p>
-          <p></p>
         </div>
       </header>
       <main className=''>
@@ -118,7 +119,7 @@ function App() {
             <div className='justForStyling moon | absolute w-full h-full rounded-[inherit] bottom-[25%] right-[10%] blur-[20px]' style={{ backgroundColor: moonCurveBackgroundColor }}></div>
           </div>
 
-          <div className='weatherCurrent | p-4 rounded-2xl backdrop-blur-[50px]' style={{ backgroundColor: cardBackgroundColor }}>
+          <div className='weatherCurrent | p-4 rounded-2xl backdrop-blur-[50px] h-max' style={{ backgroundColor: cardBackgroundColor }}>
             <p className='mb-2'>{months[timeAtCurrentLocation.getMonth()]} {timeAtCurrentLocation.getDate()}, {timeAtCurrentLocation.getHours()}:{timeAtCurrentLocation.getMinutes()}</p>
             <h2 className='text-[2rem] font-medium'>{currentWeatherJSON.name}, {currentWeatherJSON.sys.country}</h2>
             <div className='temperature | flex items-center'>
@@ -168,7 +169,9 @@ function App() {
             </div>
           </div>
 
-          <div className='weatherMap'></div>
+          <div className='weatherMap'>
+            <WeatherMap layer={"test"} coords={coords}/>
+          </div>
 
           <div className='weatherForecastGraph'>
             <WeatherForecastGraph list={forecastWeatherJSON.list.slice(0,8)} cardBackgroundColor={cardBackgroundColor} textColor={textColor}/>
