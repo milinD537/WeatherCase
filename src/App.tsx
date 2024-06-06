@@ -11,7 +11,7 @@ import { SearchArrayData } from './lib/types';
 
 import WeatherForecastCard from './components/WeatherForecastCard';
 import WeatherForecastGraph from './components/WeatherForecastGraph';
-import WeatherMap from './components/WeatherMap';
+import WeatherMap from './components/Map/WeatherMap';
 
 function App() {
   const [currentWeatherJSON, setCurrentWeatherJSON] = useState<CurrentWeatherData | null>(null)
@@ -89,6 +89,7 @@ function App() {
   const cardBackgroundColor = isDay()?"hsl(0 0% 100% / 50%)":"hsl(0 0% 0% / 50%)"
   const innerCardBackgroundColor = isDay()?"hsl(0 0% 85%)":"hsl(0 0% 15%)"
   const riseSetTextColor = isDay()?"hsl(0 0% 25%)":"hsl(0 0% 75%)"
+  const searchBarBackgroundColor = isDay()?"hsl(44, 98%, 80%)":"hsl(240, 13%, 15%)"
   // applying day/night styles
   document.body.style.backgroundColor = backgroundColor;
   document.body.style.color = textColor;
@@ -99,10 +100,10 @@ function App() {
 
   return (
     <>
-      <header>
-        <div className='relative outline w-max mx-auto px-8 py-2 rounded-full z-0'>
-          <button type="submit" className='has-[+_:focus]:animate-[rotateAnimation_2s_linear_forwards] | absolute -z-10 left-[1%] has-[+_:focus]:left-[calc(99%_-_1.5rem)] transition-[left] duration-[1s] has-[+_:focus]:delay-[1s] ease-in-out' onClick={()=> { getWeatherData({lat: searchArray[0].lat, lon: searchArray[0].lon}); setCoords([searchArray[0].lat, searchArray[0].lon]) }}><FaSearch size={"1.5rem"}/></button>
-          <input list='searchArray' type="text" className='placeholder:text-inherit peer outline-none' placeholder="City, State, Country..." id='searchCity' onChange={(e)=> setSearchCity(e.target.value)}/>
+      <header className='py-4'>
+        <div className='searchBar | relative w-[min(300px,100%)] mx-auto rounded-full z-0 py-3 px-8 backdrop-blur-[50px]' style={{ backgroundColor: searchBarBackgroundColor }}>
+          <button type="submit" className='searchIcon | has-[+_:focus]:animate-[rotateAnimation_2s_linear_forwards] | absolute -z-10 left-[2%] has-[+_:focus]:left-[calc(98%_-_1.5rem)] transition-[left] duration-[1s] has-[+_:focus]:delay-[1s] ease-in-out' onClick={()=> { getWeatherData({lat: searchArray[0].lat, lon: searchArray[0].lon}); setCoords([searchArray[0].lat, searchArray[0].lon]) }}><FaSearch size={"1.175rem"}/></button>
+          <input list='searchArray' type="text" className='SearchInput | autofill:text-inherit autofill:bg-transparent text-inherit peer outline-none bg-inherit w-full' placeholder="City, State, Country..." id='searchCity' onChange={(e)=> setSearchCity(e.target.value)}/>
           <datalist id='searchArray'>
             <option value={searchArray[0]?.name} onClick={()=> {console.log('searchArray[0]: ',searchArray[0]);
             ;getWeatherData({lat: searchArray[0].lat, lon: searchArray[0].lon})}}></option>

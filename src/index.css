@@ -18,7 +18,7 @@
 * {
   margin: 0;
   padding: 0;
-  /* outline: solid hsl(0,0%,90%,20%); */
+  /* outline: solid hsl(0,0%,10%,20%) !important; */
 }
 img, picture, video, canvas, svg {
   display: block;
@@ -32,20 +32,29 @@ body {
   font-family: 'Space Grotesk', sans-serif;
 }
 
-/* .rotateAnimation {
-  animation: rotateAnimation 2s linear;
-} */
+.searchIcon {
+  top: 50%;
+  translate: 0 -50%;
+}
+@media (width < 900px) {
+  .searchBar {
+    background-color: hsl(197, 71%, 86%) !important;
+  }
+  
+}
+
 @keyframes rotateAnimation {
   0% {
-    transform: rotate(0deg);
+    rotate: 0deg;
   }
   50% {
-    transform: rotate(-45deg);
+    rotate: -45deg;
   }
   100% {
-    transform: rotate(360deg);
+    rotate: 360deg;
   }
 }
+
 /* Loader */
 .loaderWrapper {
   --animationDuration: 3s;
@@ -148,6 +157,16 @@ body {
               0 13rem white,
               0 14rem white,
               0 15rem white, 1rem 15rem white;
+}
+
+/* User Agent Style Sheet PAKDA GAYA */
+.searchInput::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+.searchInput:-internal-autofill-selected {
+  appearance: none !important;
+  background-color: transparent !important;
+  color: inherit !important;
 }
 
 @keyframes tempRise {
