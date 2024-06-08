@@ -13,7 +13,7 @@ const WeatherMapMarker = ({coords}:{coords: Coords}) => {
         <>
             <Marker position={coords}>
                 <Popup>
-                    A pretty CSS3 popup. <br /> Easily customizable.
+                    Lat: {coords[0]}<br />Lon: {coords[1]}
                 </Popup>
             </Marker>
         </>

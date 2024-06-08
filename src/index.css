@@ -36,12 +36,12 @@ body {
   top: 50%;
   translate: 0 -50%;
 }
-@media (width < 900px) {
+/* @media (width < 900px) {
   .searchBar {
     background-color: hsl(197, 71%, 86%) !important;
   }
   
-}
+} */
 
 @keyframes rotateAnimation {
   0% {
