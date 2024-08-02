@@ -42,7 +42,6 @@ function App() {
     getWeatherData({lat: 19.0785451, lon: 72.878176});
   },[])
 
-  // let searchCity = document.getElementById('searchCity')?.value;  
   useEffect(()=>{
     if(searchCity.trim() === '') return;
     console.log('searchCity: ',searchCity);
@@ -74,43 +73,38 @@ function App() {
   }
   
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-  const sunrise = new Date((currentWeatherJSON.sys.sunrise * 1000) + currentWeatherJSON.timezone);
-  const sunset = new Date((currentWeatherJSON.sys.sunset * 1000) + currentWeatherJSON.timezone);
-  const timeAtCurrentLocation = new Date((currentWeatherJSON.dt * 1000) + currentWeatherJSON.timezone);
+  const sunrise = new Date((currentWeatherJSON.sys.sunrise + currentWeatherJSON.timezone) * 1000).toUTCString().slice(17, 22);
+  const sunset = new Date((currentWeatherJSON.sys.sunset + currentWeatherJSON.timezone) * 1000).toUTCString().slice(17, 22);
+  const timeAtCurrentLocation = new Date((currentWeatherJSON.dt + currentWeatherJSON.timezone) * 1000).toUTCString();
   
-  // Function to check if day or not
-  const isDay = ()=>(currentWeatherJSON.weather[0].icon.endsWith("d")?true:false)
+  // variable check if day or not
+  const isDay = currentWeatherJSON.weather[0].icon.endsWith("d");
   // setting styles based on day or night
-  const backgroundColor = isDay()?"#87CEEB":"#444458"
-  const textColor = isDay()?"black":"white"
-  const sunMoon = isDay()?"#FDC630":"#CECACB"
-  const sunMoonBlur = isDay()?100:1
-  const moonCurveBackgroundColor = isDay()?"transparent":"#444458"
-  const cardBackgroundColor = isDay()?"hsl(0 0% 100% / 50%)":"hsl(0 0% 0% / 50%)"
-  const innerCardBackgroundColor = isDay()?"hsl(0 0% 85% / 10%)":"hsl(0 0% 15% / 10%)"
-  const riseSetTextColor = isDay()?"hsl(0 0% 25%)":"hsl(0 0% 75%)"
-  const searchBarBackgroundColor = isDay()?"bg-[hsl(197_71%_86%)] min-[900px]:bg-[hsl(44_98%_80%)]":"bg-[hsl(240_13%_15%)]"
+  const backgroundColor = isDay?"#87CEEB":"#444458"
+  const textColor = isDay?"black":"white"
+  const sunMoon = isDay?"#FDC630":"#CECACB"
+  const sunMoonBlur = isDay?100:1
+  const moonCurveBackgroundColor = isDay?"transparent":"#444458"
+  const cardBackgroundColor = isDay?"hsl(0 0% 100% / 50%)":"hsl(0 0% 0% / 50%)"
+  const innerCardBackgroundColor = isDay?"hsl(0 0% 85% / 10%)":"hsl(0 0% 15% / 10%)"
+  const riseSetTextColor = isDay?"hsl(0 0% 25%)":"hsl(0 0% 75%)"
+  const searchBarBackgroundColor = isDay?"bg-[hsl(197_71%_86%)] min-[900px]:bg-[hsl(44_98%_80%)]":"bg-[hsl(240_13%_15%)]"
   // applying day/night styles
   document.body.style.backgroundColor = backgroundColor;
   document.body.style.color = textColor;
-
-  // const coords = (searchArray[0])?{lat: searchArray[0].lat, lon: searchArray[0].lon}:{lat: 19.0785451, lon: 72.878176};
-  // console.log(coords);
-  
 
   return (
     <>
       <header className='py-4'>
         <div className={`searchBar | relative w-[min(300px,100%)] mx-auto rounded-full z-0 py-3 px-8 backdrop-blur-[50px] ${searchBarBackgroundColor}`}>
-          <button type="submit" className='searchIcon | has-[+_:focus]:animate-[rotateAnimation_1.2s_linear_forwards] | absolute -z-10 left-[2%] has-[+_:focus]:left-[calc(98%_-_1.5rem)] transition-[left] duration-[0.6s] has-[+_:focus]:delay-[0.6s] ease-in-out' onClick={()=> { getWeatherData({lat: searchArray[0].lat, lon: searchArray[0].lon}); setCoords([searchArray[0].lat, searchArray[0].lon]) }}><FaSearch size={"1.175rem"}/></button>
+          <button type="submit" className='searchIcon | has-[+_:focus]:animate-[rotateAnimation_1.2s_linear_forwards] | absolute -z-10 left-[2%] has-[+_:focus]:left-[calc(98%_-_1.5rem)] transition-[left] duration-[0.6s] has-[+_:focus]:delay-[0.6s] ease-in-out' onMouseDown={(e)=> {e.preventDefault()}} onClick={()=> { getWeatherData({lat: searchArray[0].lat, lon: searchArray[0].lon}); setCoords([searchArray[0].lat, searchArray[0].lon]) }}><FaSearch size={"1.175rem"}/></button>
           <input list='searchArray' type="text" className='SearchInput | autofill:text-inherit autofill:bg-transparent text-inherit peer outline-none bg-inherit w-full' placeholder="Search for a City..." id='searchCity' onChange={(e)=> setSearchCity(e.target.value)}/>
           <datalist id='searchArray'>
-            <option value={searchArray[0]?.name} onClick={()=> {console.log('searchArray[0]: ',searchArray[0]);
-            ;getWeatherData({lat: searchArray[0].lat, lon: searchArray[0].lon})}}></option>
-            <option value={searchArray[1]?.name}></option>
-            <option value={searchArray[2]?.name}></option>
-            <option value={searchArray[3]?.name}></option>
-            <option value={searchArray[4]?.name}></option>
+            <option value={`${searchArray[0]?.name}, ${searchArray[0]?.country}`}></option>
+            <option value={`${searchArray[1]?.name}, ${searchArray[1]?.country}`}></option>
+            <option value={`${searchArray[2]?.name}, ${searchArray[2]?.country}`}></option>
+            <option value={`${searchArray[3]?.name}, ${searchArray[3]?.country}`}></option>
+            <option value={`${searchArray[4]?.name}, ${searchArray[4]?.country}`}></option>
           </datalist>
         </div>
       </header>
@@ -122,7 +116,7 @@ function App() {
           </div>
 
           <div className='weatherCurrent | p-4 rounded-2xl backdrop-blur-[50px] h-max' style={{ backgroundColor: cardBackgroundColor }}>
-            <p className='mb-2'>{months[timeAtCurrentLocation.getMonth()]} {timeAtCurrentLocation.getDate()}, {timeAtCurrentLocation.toTimeString().slice(0, 5)}</p>
+            <p className='mb-2'>{timeAtCurrentLocation.slice(0,-7)}</p>
             <h2 className='text-[2rem] font-medium'>{currentWeatherJSON.name}, {currentWeatherJSON.sys.country}</h2>
             <div className='temperature | flex items-center'>
               <img src={`https://openweathermap.org/img/wn/${currentWeatherJSON.weather[0].icon}@2x.png`} alt={currentWeatherJSON.weather[0].description} title={currentWeatherJSON.weather[0].description} />
@@ -135,15 +129,14 @@ function App() {
                 <IoSunny size={"2rem"} />
                 <div>
                   <p className='text-xs font-light' style={{ color: riseSetTextColor }}>Sunrise</p>
-                  <p className='text-2xl font-medium'>{sunrise.toTimeString().slice(0, 5)}</p>
+                  <p className='text-2xl font-medium'>{sunrise}</p>
                 </div>
               </div>
               <div className="sunset | flex items-center gap-3">
                 <IoMoon size={"2rem"} />
                 <div>
                   <p className='text-xs font-light' style={{ color: riseSetTextColor }}>Sunset</p>
-                  <p className='text-2xl font-medium'>{sunset.toTimeString().slice(0, 5)}</p>
-                  {/* <p className='text-2xl font-medium'>{sunset.getHours() % 12 < 10 ? (<span>0</span>) : "yo"}{`${sunset.getHours() % 12 || 12}:${sunset.getMinutes()}`} PM</p> */}
+                  <p className='text-2xl font-medium'>{sunset}</p>
                 </div>
               </div>
             </div>
